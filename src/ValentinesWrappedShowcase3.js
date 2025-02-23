@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { Waves } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 
-function ValentinesWrappedShowcase3() {
+function ValentinesWrappedShowcase3({ onNext }) {
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [autoAnimatePos, setAutoAnimatePos] = useState({ x: 0, y: 0 });
   const [textOpacity, setTextOpacity] = useState(0);
   const [textFadeComplete, setTextFadeComplete] = useState(false);
+  const [showNextButton, setShowNextButton] = useState(false);
   const [wavePhase, setWavePhase] = useState(0);
   const [textWavePhase, setTextWavePhase] = useState(0);
   const lastInteractionTime = useRef(Date.now());
@@ -25,7 +26,7 @@ function ValentinesWrappedShowcase3() {
         waveRotationIncrement: 25,
         wavePhaseIncrement: 0.015,
         translateYMultiplier: 110,
-        waveScale: 2.2,
+        waveScale: 1.8, // Reduced from 2.2 to zoom out
         borderRadius: '45%',
         filter: 'blur(15px)',
         opacity: 0.25,
@@ -52,10 +53,13 @@ function ValentinesWrappedShowcase3() {
         if (elapsed >= 0) {
           const newOpacity = Math.min(elapsed / 4000, 1);
           setTextOpacity(newOpacity);
+          if (newOpacity >= 1 && !textFadeComplete) {
+            setTextFadeComplete(true);
+            // Show next button 2 seconds after text appears
+            setTimeout(() => setShowNextButton(true), 2000);
+          }
           if (newOpacity < 1) {
             requestAnimationFrame(fadeIn);
-          } else {
-            setTextFadeComplete(true);
           }
         }
       };
@@ -127,7 +131,6 @@ function ValentinesWrappedShowcase3() {
       onKeyDown={handleInteraction}
       tabIndex={0}
     >
-      
       <div className="flex-1 relative bg-black">
         <div className="absolute inset-0 flex items-center justify-center overflow-hidden">
           {Array(styleConfig.waves.numWaves).fill(null).map((_, i) => {
@@ -182,6 +185,18 @@ function ValentinesWrappedShowcase3() {
             {textChunks}
           </div>
         </div>
+
+        {/* Next Button */}
+        {showNextButton && (
+          <div className="absolute bottom-8 right-8 z-50 transition-opacity duration-1000 opacity-100">
+            <button 
+              onClick={onNext}
+              className="flex items-center gap-2 px-6 py-3 rounded-full bg-white/20 text-white hover:bg-white/30 transition-all"
+            >
+              Next <ArrowRight size={20} />
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

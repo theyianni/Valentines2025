@@ -3,6 +3,7 @@ import WelcomePage from './WelcomePage';
 import ValentinesWrappedShowcase1 from './ValentinesWrappedShowcase1';
 import ValentinesWrappedShowcase2 from './ValentinesWrappedShowcase2';
 import ValentinesWrappedShowcase3 from './ValentinesWrappedShowcase3';
+import ValentinesCard from './ValentinesCard';
 
 function App() {
   const [currentPage, setCurrentPage] = useState(0);
@@ -11,7 +12,8 @@ function App() {
     <WelcomePage key="welcome" onStart={() => setCurrentPage(1)} />,
     <ValentinesWrappedShowcase1 key="disk-puzzle" onNext={() => setCurrentPage(2)} />,
     <ValentinesWrappedShowcase2 key="blocks" onNext={() => setCurrentPage(3)} />,
-    <ValentinesWrappedShowcase3 key="waves" />
+    <ValentinesWrappedShowcase3 key="waves" onNext={() => setCurrentPage(4)} />,
+    <ValentinesCard key="card" />
   ];
 
   return pages[currentPage];
