@@ -37,14 +37,12 @@ function ValentinesWrappedShowcase1({ onNext }) {
     setDiskPositions(randomPositions);
   }, []);
 
-  // Check if disks are aligned relative to each other
+  // Check if disks are aligned
   useEffect(() => {
     if (diskPositions.length === 0 || isWon) return;
     
-    // Pick the first moved or dragged disk as reference
     const referencePos = diskPositions[draggedDisk !== null ? draggedDisk : 0];
     
-    // Check if all disks are close to the reference disk
     const isAligned = diskPositions.every((pos) => {
       const distance = Math.sqrt(
         Math.pow(pos.x - referencePos.x, 2) + 
@@ -55,7 +53,6 @@ function ValentinesWrappedShowcase1({ onNext }) {
     
     if (isAligned) {
       setIsWon(true);
-      // Align all disks perfectly with the reference disk
       setDiskPositions(prev => prev.map(() => ({ ...referencePos })));
       
       setTimeout(() => {
@@ -73,6 +70,38 @@ function ValentinesWrappedShowcase1({ onNext }) {
     return () => intervals.forEach(clearInterval);
   }, []);
 
+  // Touch event handlers
+  const handleDiskTouchStart = (e, index) => {
+    if (isWon) return;
+    e.preventDefault(); // Prevent scrolling while dragging
+    setDraggedDisk(index);
+    const touch = e.touches[0];
+    const bounds = e.currentTarget.getBoundingClientRect();
+    setStartDragPos({
+      x: touch.clientX - bounds.left - diskPositions[index].x,
+      y: touch.clientY - bounds.top - diskPositions[index].y
+    });
+  };
+
+  const handleDiskTouchMove = (e) => {
+    if (draggedDisk !== null && startDragPos !== null && !isWon) {
+      const touch = e.touches[0];
+      const bounds = e.currentTarget.getBoundingClientRect();
+      setDiskPositions(prev => prev.map((pos, i) => 
+        i === draggedDisk ? {
+          x: touch.clientX - bounds.left - startDragPos.x,
+          y: touch.clientY - bounds.top - startDragPos.y
+        } : pos
+      ));
+    }
+  };
+
+  const handleDiskTouchEnd = () => {
+    setDraggedDisk(null);
+    setStartDragPos(null);
+  };
+
+  // Keep mouse event handlers for desktop compatibility
   const handleDiskMouseDown = (e, index) => {
     if (isWon) return;
     e.preventDefault();
@@ -84,7 +113,7 @@ function ValentinesWrappedShowcase1({ onNext }) {
     });
   };
 
-  const handleDiskDrag = (e) => {
+  const handleDiskMouseMove = (e) => {
     if (draggedDisk !== null && startDragPos !== null && !isWon) {
       const bounds = e.currentTarget.getBoundingClientRect();
       setDiskPositions(prev => prev.map((pos, i) => 
@@ -142,7 +171,6 @@ function ValentinesWrappedShowcase1({ onNext }) {
       </div>
       
       <div className="flex-1 transition-all duration-1000 bg-black relative">
-        {/* Success Message */}
         <div 
           className={`absolute inset-0 flex items-center justify-center z-10 transition-opacity duration-1000 ${
             showMessage ? 'opacity-100' : 'opacity-0 pointer-events-none'
@@ -158,12 +186,13 @@ function ValentinesWrappedShowcase1({ onNext }) {
           </div>
         </div>
 
-        {/* Puzzle Area */}
         <div 
           className="h-full w-full flex items-center justify-center overflow-hidden"
-          onMouseMove={handleDiskDrag}
+          onMouseMove={handleDiskMouseMove}
           onMouseUp={handleDiskMouseUp}
           onMouseLeave={handleDiskMouseUp}
+          onTouchMove={handleDiskTouchMove}
+          onTouchEnd={handleDiskTouchEnd}
         >
           <div className="relative w-96 h-96">
             {Array(styleConfig.gradient.numLayers).fill(null).map((_, i) => {
@@ -186,8 +215,8 @@ function ValentinesWrappedShowcase1({ onNext }) {
                     transition: draggedDisk === i ? 'none' : 'all 0.5s ease-out'
                   }}
                   onMouseDown={(e) => handleDiskMouseDown(e, i)}
+                  onTouchStart={(e) => handleDiskTouchStart(e, i)}
                 >
-                  {/* Center alignment dot */}
                   <div 
                     className="w-2 h-2 rounded-full bg-white opacity-50"
                     style={{
