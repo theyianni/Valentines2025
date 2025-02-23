@@ -3,8 +3,16 @@ import { ArrowRight } from 'lucide-react';
 
 const BlocksContent = ({ styleConfig, gradientAngle }) => {
   const [touchedBlocks, setTouchedBlocks] = useState(new Set());
-  const [lastTouchPosition, setLastTouchPosition] = useState(null);
   const containerRef = useRef(null);
+
+  // Prevent default touch behavior at document level
+  useEffect(() => {
+    const preventDefault = (e) => e.preventDefault();
+    document.body.addEventListener('touchmove', preventDefault, { passive: false });
+    return () => {
+      document.body.removeEventListener('touchmove', preventDefault);
+    };
+  }, []);
 
   const handleTouchMove = (e) => {
     e.preventDefault(); // Prevent scrolling
@@ -23,7 +31,6 @@ const BlocksContent = ({ styleConfig, gradientAngle }) => {
     
     if (row >= 0 && row < styleConfig.blocks.grid.rows &&
         col >= 0 && col < styleConfig.blocks.grid.cols) {
-      const currentIndex = row * styleConfig.blocks.grid.cols + col;
       
       // Add blocks in a small radius around the touch point
       const radius = 2; // Adjust this value to change the "brush" size
@@ -39,8 +46,6 @@ const BlocksContent = ({ styleConfig, gradientAngle }) => {
         }
       }
     }
-    
-    setLastTouchPosition({ x: touchX, y: touchY });
   };
 
   const numBlocks = styleConfig.blocks.grid.rows * styleConfig.blocks.grid.cols;
@@ -73,8 +78,9 @@ const BlocksContent = ({ styleConfig, gradientAngle }) => {
             const hue = (time * styleConfig.blocks.animationParams.hueShiftSpeed + (row + col) * 10) % 360;
             const isRevealed = touchedBlocks.has(i);
 
-            const backgroundPositionX = (col * 100 / (styleConfig.blocks.grid.cols - 1));
-            const backgroundPositionY = (row * 100 / (styleConfig.blocks.grid.rows - 1));
+            // Calculate background position for this block
+            const xPercent = (col / (styleConfig.blocks.grid.cols - 1)) * 100;
+            const yPercent = (row / (styleConfig.blocks.grid.rows - 1)) * 100;
 
             return (
               <div 
@@ -102,15 +108,15 @@ const BlocksContent = ({ styleConfig, gradientAngle }) => {
                     }}
                   />
                   
-                  {/* Back face */}
+                  {/* Back face - Image portion */}
                   <div
                     className="absolute w-full h-full backface-hidden overflow-hidden"
                     style={{
                       transform: 'rotateY(180deg)',
                       backfaceVisibility: 'hidden',
                       background: `url('/wrapped2024.jpg')`,
-                      backgroundSize: 'cover',
-                      backgroundPosition: 'center',
+                      backgroundSize: `${styleConfig.blocks.grid.cols * 100}% ${styleConfig.blocks.grid.rows * 100}%`,
+                      backgroundPosition: `${xPercent}% ${yPercent}%`
                     }}
                   />
                 </div>
@@ -124,14 +130,6 @@ const BlocksContent = ({ styleConfig, gradientAngle }) => {
 };
 
 function ValentinesWrappedShowcase2({ onNext }) {
-  // Prevent default touch behavior at document level
-  useEffect(() => {
-    const preventDefault = (e) => e.preventDefault();
-    document.body.addEventListener('touchmove', preventDefault, { passive: false });
-    return () => {
-      document.body.removeEventListener('touchmove', preventDefault);
-    };
-  }, []);
   const styleConfig = {
     blocks: {
       colors: [
