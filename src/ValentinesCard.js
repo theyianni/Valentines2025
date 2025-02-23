@@ -20,25 +20,25 @@ function ValentinesCard() {
           }
         `}
       </style>
-      <div className="container mx-auto px-4 py-16">
+      <div className="container mx-auto px-4 py-4">
         <div className="max-w-2xl mx-auto bg-white/90 backdrop-blur-sm rounded-3xl shadow-2xl overflow-hidden">
         
           {/* Card Header */}
-          <div className="bg-red-50 p-8 text-center">
+          <div className="bg-red-50 p-3 text-center">
             <Heart className="w-16 h-16 text-red-500 mx-auto mb-4 animate-pulse" />
-            <h1 className="text-3xl font-bold text-red-600 mb-2">My Maybeeb</h1>
+            <h1 className="text-3xl font-bold text-red-600 mb-2">For My Maybeeb</h1>
             <p className="text-red-400 italic">February 23, 2025</p>
           </div>
           
           {/* Card Content */}
-          <div className="p-8">
+          <div className="p-6">
             <div className="prose prose-lg mx-auto">
               <p className="text-gray-700 leading-relaxed mb-6">
                 Dearest dearest,
               </p>
               
               <p className="text-gray-700 leading-relaxed mb-6">
-              You make me so unbelievably happy in a way that feels foreign to me. Thank you so much for being the best part of every day since we've met. I said it before, and I'll keep saying it:
+              You make me so unbelievably happy in a way that feels foreign to me. I said it before, and I'll keep saying it:
               </p>
               
               <p className="text-gray-700 leading-relaxed mb-6">
@@ -46,7 +46,7 @@ function ValentinesCard() {
               </p>
               
               <p className="text-gray-700 leading-relaxed mb-6">
-                Thank you for being you, for loving me, and for making every day feel like Valentine's Day.
+                Thank you for being you, for loving me, and being the best part of every day.
               </p>
               
               <p className="text-gray-700 text-right italic mt-8">
@@ -57,7 +57,7 @@ function ValentinesCard() {
           </div>
 
           {/* Card Footer */}
-          <div className="bg-red-50 p-6 text-center">
+          <div className="bg-red-50 p-2 text-center">
             <p className="text-sm text-red-400">
               Happy Valentine's Day, my love ❤️
             </p>
