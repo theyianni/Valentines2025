@@ -109,8 +109,8 @@ const BlocksContent = ({ styleConfig, gradientAngle }) => {
                       transform: 'rotateY(180deg)',
                       backfaceVisibility: 'hidden',
                       background: `url('/wrapped2024.jpg')`,
-                      backgroundSize: '1600%',
-                      backgroundPosition: `${backgroundPositionX}% ${backgroundPositionY}%`
+                      backgroundSize: 'cover',
+                      backgroundPosition: 'center',
                     }}
                   />
                 </div>
@@ -124,6 +124,14 @@ const BlocksContent = ({ styleConfig, gradientAngle }) => {
 };
 
 function ValentinesWrappedShowcase2({ onNext }) {
+  // Prevent default touch behavior at document level
+  useEffect(() => {
+    const preventDefault = (e) => e.preventDefault();
+    document.body.addEventListener('touchmove', preventDefault, { passive: false });
+    return () => {
+      document.body.removeEventListener('touchmove', preventDefault);
+    };
+  }, []);
   const styleConfig = {
     blocks: {
       colors: [
@@ -165,7 +173,7 @@ function ValentinesWrappedShowcase2({ onNext }) {
 
   return (
     <div 
-      className="w-full h-screen flex flex-col" 
+      className="w-full h-screen flex flex-col fixed inset-0 overflow-hidden touch-none" 
       style={{ 
         background: 'linear-gradient(45deg, #FF0080, #7928CA, #FF4D4D)',
         backgroundSize: '400% 400%',
