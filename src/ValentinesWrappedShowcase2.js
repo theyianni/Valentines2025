@@ -119,7 +119,7 @@ const BlocksContent = ({ styleConfig, gradientAngle }) => {
   );
 };
 
-function SpotifyWrappedShowcase2({ onNext }) {
+function ValentinesWrappedShowcase2({ onNext }) {
   const styleConfig = {
     blocks: {
       colors: [
@@ -197,4 +197,4 @@ function SpotifyWrappedShowcase2({ onNext }) {
   );
 }
 
-export default SpotifyWrappedShowcase2;
+export default ValentinesWrappedShowcase2;

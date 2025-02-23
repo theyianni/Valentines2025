@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { ArrowRight } from 'lucide-react';
+import React, { useState, useEffect, useCallback } from 'react';
+import _ from 'lodash';
 
-function SpotifyWrappedShowcase1({ onNext }) {
+const ValentinesWrappedShowcase = () => {
   const [currentColorIndex, setCurrentColorIndex] = useState(0);
   const [gradientAngle, setGradientAngle] = useState(0);
   const [diskPositions, setDiskPositions] = useState([]);
@@ -84,7 +84,7 @@ function SpotifyWrappedShowcase1({ onNext }) {
     });
   };
 
-  const handleDiskDrag = (e) => {
+  const handleDiskDrag = useCallback((e) => {
     if (draggedDisk !== null && startDragPos !== null && !isWon) {
       const bounds = e.currentTarget.getBoundingClientRect();
       setDiskPositions(prev => prev.map((pos, i) => 
@@ -94,7 +94,7 @@ function SpotifyWrappedShowcase1({ onNext }) {
         } : pos
       ));
     }
-  };
+  }, [draggedDisk, startDragPos, isWon]);
 
   const handleDiskMouseUp = () => {
     setDraggedDisk(null);
@@ -121,24 +121,15 @@ function SpotifyWrappedShowcase1({ onNext }) {
       <div className="flex gap-4 p-6 bg-gradient-to-r from-gray-900 to-black relative z-50">
         <div className="flex-1">
           <h2 className="text-white text-xl">
+            Stack the gradient disks anywhere to reveal a message
           </h2>
         </div>
-        <div className="flex items-center gap-4">
-          <button
-            onClick={resetPuzzle}
-            className="px-6 py-3 rounded-full bg-gray-800 text-gray-300 hover:bg-gray-700 transition-all"
-          >
-            Reset Puzzle
-          </button>
-          {isWon && (
-            <button 
-              onClick={onNext}
-              className="flex items-center gap-2 px-6 py-3 rounded-full bg-green-600 text-white hover:bg-green-700 transition-all"
-            >
-              Next <ArrowRight size={20} />
-            </button>
-          )}
-        </div>
+        <button
+          onClick={resetPuzzle}
+          className="px-6 py-3 rounded-full bg-gray-800 text-gray-300 hover:bg-gray-700 transition-all"
+        >
+          Reset Puzzle
+        </button>
       </div>
       
       <div className="flex-1 transition-all duration-1000 bg-black relative">
@@ -153,7 +144,7 @@ function SpotifyWrappedShowcase1({ onNext }) {
               HAPPY VALENTINE'S DAY
             </h1>
             <p className="text-base text-white opacity-70 tracking-wide font-light">
-              I love you so much and can't wait to keep loving you deeper
+              I love you so much and can't wait to love you deeper
             </p>
           </div>
         </div>
@@ -202,6 +193,6 @@ function SpotifyWrappedShowcase1({ onNext }) {
       </div>
     </div>
   );
-}
+};
 
-export default SpotifyWrappedShowcase1;
+export default ValentinesWrappedShowcase;

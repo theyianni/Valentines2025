@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Waves } from 'lucide-react';
 
-function SpotifyWrappedShowcase3() {
+const ValentinesWrappedShowcase = () => {
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [autoAnimatePos, setAutoAnimatePos] = useState({ x: 0, y: 0 });
   const [textOpacity, setTextOpacity] = useState(0);
@@ -106,7 +106,7 @@ function SpotifyWrappedShowcase3() {
   }, []);
 
   // Create text chunks for wave effect
-  const textChunks = Array(160).fill(null).map((_, rowIndex) => (
+  const textChunks = Array(80).fill(null).map((_, rowIndex) => (
     <div
       key={rowIndex}
       className="whitespace-pre"
@@ -193,6 +193,6 @@ function SpotifyWrappedShowcase3() {
       </div>
     </div>
   );
-}
+};
 
-export default SpotifyWrappedShowcase3;
+export default ValentinesWrappedShowcase;
