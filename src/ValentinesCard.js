@@ -26,7 +26,7 @@ function ValentinesCard() {
           {/* Card Header */}
           <div className="bg-red-50 p-3 text-center">
             <Heart className="w-16 h-16 text-red-500 mx-auto mb-4 animate-pulse" />
-            <h1 className="text-3xl font-bold text-red-600 mb-2">For My Maybeeb</h1>
+            <h1 className="text-3xl font-bold text-red-600 mb-2">For My Maybeebs</h1>
             <p className="text-red-400 italic">February 23, 2025</p>
           </div>
           
@@ -51,7 +51,7 @@ function ValentinesCard() {
               
               <p className="text-gray-700 text-right italic mt-8">
                 Love,<br />
-                Your Maybeeb
+                Your Maybeebs
               </p>
             </div>
           </div>
