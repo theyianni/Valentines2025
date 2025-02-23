@@ -95,4 +95,110 @@ const BlocksContent = ({ styleConfig, gradientAngle }) => {
                   <div
                     className="absolute w-full h-full backface-hidden"
                     style={{
-                      background: `linear-
+                      background: `linear-gradient(${gradientAngle}deg, 
+                        hsl(${hue}, 70%, 50%), 
+                        hsl(${(hue + 60) % 360}, 70%, 50%))`,
+                      backfaceVisibility: 'hidden'
+                    }}
+                  />
+                  
+                  {/* Back face */}
+                  <div
+                    className="absolute w-full h-full backface-hidden overflow-hidden"
+                    style={{
+                      transform: 'rotateY(180deg)',
+                      backfaceVisibility: 'hidden',
+                      background: `url('/wrapped2024.jpg')`,
+                      backgroundSize: '1600%',
+                      backgroundPosition: `${backgroundPositionX}% ${backgroundPositionY}%`
+                    }}
+                  />
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+function ValentinesWrappedShowcase2({ onNext }) {
+  const styleConfig = {
+    blocks: {
+      colors: [
+        ['#4facfe', '#00f2fe'],
+        ['#f093fb', '#f5576c'],
+        ['#FF5733', '#C70039'],
+      ],
+      grid: {
+        rows: 12,
+        cols: 16,
+      },
+      animationParams: {
+        flipDuration: 720,
+        rippleSpeed: 50,
+        rippleRadius: 3,
+        baseHeight: 20,
+        activeHeight: 40,
+        hueShiftSpeed: 30
+      }
+    }
+  };
+
+  const [gradientAngle, setGradientAngle] = useState(0);
+  const [currentBlockColorIndex, setCurrentBlockColorIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentBlockColorIndex(prev => (prev + 1) % styleConfig.blocks.colors.length);
+    }, 4000);
+    return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setGradientAngle(prev => (prev + 1.2) % 360);
+    }, 80);
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <div 
+      className="w-full h-screen flex flex-col" 
+      style={{ 
+        background: 'linear-gradient(45deg, #FF0080, #7928CA, #FF4D4D)',
+        backgroundSize: '400% 400%',
+        animation: 'gradient-shift 15s ease infinite'
+      }}
+    >
+      <style>
+        {`
+          @keyframes gradient-shift {
+            0% { background-position: 0% 50% }
+            50% { background-position: 100% 50% }
+            100% { background-position: 0% 50% }
+          }
+        `}
+      </style>
+      <div className="flex-1">
+        <BlocksContent 
+          styleConfig={styleConfig} 
+          gradientAngle={gradientAngle} 
+        />
+      </div>
+      
+      {/* Next Button */}
+      <div className="absolute bottom-8 right-8 z-50">
+        <button 
+          onClick={onNext}
+          className="flex items-center gap-2 px-6 py-3 rounded-full bg-white/20 text-white hover:bg-white/30 transition-all"
+        >
+          Next <ArrowRight size={20} />
+        </button>
+      </div>
+    </div>
+  );
+}
+
+export default ValentinesWrappedShowcase2;
