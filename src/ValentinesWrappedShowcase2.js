@@ -4,6 +4,7 @@ import { ArrowRight } from 'lucide-react';
 const BlocksContent = ({ styleConfig, gradientAngle }) => {
   const [touchedBlocks, setTouchedBlocks] = useState(new Set());
   const containerRef = useRef(null);
+  const isMouseDownRef = useRef(false);
 
   // Prevent default touch behavior at document level
   useEffect(() => {
@@ -14,25 +15,23 @@ const BlocksContent = ({ styleConfig, gradientAngle }) => {
     };
   }, []);
 
-  const handleTouchMove = (e) => {
-    e.preventDefault(); // Prevent scrolling
-    const touch = e.touches[0];
+  const handleInteraction = (clientX, clientY) => {
     const bounds = containerRef.current.getBoundingClientRect();
-    const touchX = touch.clientX - bounds.left;
-    const touchY = touch.clientY - bounds.top;
+    const x = clientX - bounds.left;
+    const y = clientY - bounds.top;
     
     // Calculate relative position within grid
     const cellWidth = bounds.width / styleConfig.blocks.grid.cols;
     const cellHeight = bounds.height / styleConfig.blocks.grid.rows;
     
-    // Get the current block being touched
-    const col = Math.floor(touchX / cellWidth);
-    const row = Math.floor(touchY / cellHeight);
+    // Get the current block being interacted with
+    const col = Math.floor(x / cellWidth);
+    const row = Math.floor(y / cellHeight);
     
     if (row >= 0 && row < styleConfig.blocks.grid.rows &&
         col >= 0 && col < styleConfig.blocks.grid.cols) {
       
-      // Add blocks in a small radius around the touch point
+      // Add blocks in a small radius around the interaction point
       const radius = 2; // Adjust this value to change the "brush" size
       for (let r = -radius; r <= radius; r++) {
         for (let c = -radius; c <= radius; c++) {
@@ -48,6 +47,37 @@ const BlocksContent = ({ styleConfig, gradientAngle }) => {
     }
   };
 
+  // Touch event handlers
+  const handleTouchMove = (e) => {
+    e.preventDefault(); // Prevent scrolling
+    const touch = e.touches[0];
+    handleInteraction(touch.clientX, touch.clientY);
+  };
+
+  // Mouse event handlers
+  const handleMouseMove = (e) => {
+    if (isMouseDownRef.current) {
+      handleInteraction(e.clientX, e.clientY);
+    }
+  };
+
+  const handleMouseDown = (e) => {
+    isMouseDownRef.current = true;
+    handleInteraction(e.clientX, e.clientY);
+  };
+
+  const handleMouseUp = () => {
+    isMouseDownRef.current = false;
+  };
+
+  // Add mouse up handler to window to catch mouse up outside container
+  useEffect(() => {
+    window.addEventListener('mouseup', handleMouseUp);
+    return () => {
+      window.removeEventListener('mouseup', handleMouseUp);
+    };
+  }, []);
+
   const numBlocks = styleConfig.blocks.grid.rows * styleConfig.blocks.grid.cols;
 
   return (
@@ -56,6 +86,9 @@ const BlocksContent = ({ styleConfig, gradientAngle }) => {
       className="h-full w-full overflow-hidden flex items-center justify-center"
       onTouchMove={handleTouchMove}
       onTouchStart={handleTouchMove}
+      onMouseMove={handleMouseMove}
+      onMouseDown={handleMouseDown}
+      onMouseUp={handleMouseUp}
     >
       <div 
         className="relative w-full h-full"
